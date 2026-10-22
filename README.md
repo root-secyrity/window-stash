@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center"># Windows</h1>
+  <h1 align="center">Windows</h1>
   <p align="center">
     <img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
