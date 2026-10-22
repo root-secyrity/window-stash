@@ -7,7 +7,23 @@
 # is exactly what makes Ryoku's own Super+H unreliable to reverse.
 set -uo pipefail
 
+# Hiding needs a compositor with special workspaces. Ask the seam for the
+# capability, never for a compositor name, and stand down where it is absent -
+# the same gate Ryoku's own ryoku-workspace helper uses.
+if ! ryoku wm caps 2>/dev/null | grep -q '"specialWorkspace"'; then
+    echo "no-scratchpad"
+    exit 0
+fi
+if [[ $(ryoku wm status 2>/dev/null | sed -n 's/^Workspace model: //p' | tr -d '[:space:]') != fixed ]]; then
+    echo "no-scratchpad"
+    exit 0
+fi
+
 addr="${1:?window address required}"
+
+# The id reaches a hyprctl dispatch string, so accept only the shape the seam
+# reports (0x + hex). Nothing else is ever interpolated.
+[[ $addr =~ ^0x[0-9a-fA-F]+$ ]] || { echo "bad-window-id"; exit 1; }
 
 active_ws() { hyprctl activeworkspace -j 2>/dev/null | jq -r '.id' 2>/dev/null || echo 0; }
 

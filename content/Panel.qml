@@ -21,6 +21,7 @@ Item {
     readonly property int stashed: service ? service.stashedCount : 0
     readonly property string pending: service ? service.pending : ""
     readonly property string message: service ? service.message : ""
+    readonly property bool canHide: service ? service.canHide : false
 
     implicitWidth: root.widthBudget
     implicitHeight: col.implicitHeight + 24 * root.s
@@ -123,6 +124,22 @@ Item {
                                 elide: Text.ElideRight
                             }
 
+                            // Clicking the row's name focuses that window through
+                            // the seam (window.focus), so a stashed or buried
+                            // window comes back without touching HIDE.
+                            MouseArea {
+                                anchors.left: dot.right
+                                anchors.right: root.canHide ? actionButton.left : closeButton.left
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+                                anchors.rightMargin: 8 * root.s
+                                enabled: root.pending === ""
+                                hoverEnabled: true
+                                cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                onClicked: if (root.service)
+                                    root.service.act(rowItem.modelData.addr, "focus")
+                            }
+
                             // CLOSE sits right-most, the stash action beside it.
                             Rectangle {
                                 id: closeButton
@@ -160,6 +177,7 @@ Item {
                                 id: actionButton
                                 anchors.right: closeButton.left
                                 anchors.rightMargin: 6 * root.s
+                                visible: root.canHide
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: btnLabel.implicitWidth + 20 * root.s
                                 height: 22 * root.s
@@ -207,7 +225,9 @@ Item {
 
         Text {
             width: parent.width
-            text: "HIDE parks a window out of sight. SHOW returns it to its own workspace. CLOSE ends it."
+            text: root.canHide
+                ? "HIDE parks a window out of sight. SHOW returns it to its own workspace. CLOSE ends it."
+                : "This window manager has no scratchpad, so HIDE is left out. Click a row to focus it; CLOSE ends it."
             color: Theme.dim
             font.family: Theme.font
             font.pixelSize: 10 * root.s

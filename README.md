@@ -11,9 +11,12 @@ A Ryoku shell plugin (`window-stash`). It lists the open windows on the bar and
 lets you park any of them out of sight with one click, bring it back to the
 workspace it came from, or close it.
 
-**Hyprland only.** The window list is read from `hyprctl`; on niri (the other
-compositor Ryoku ships) there is no such command and the widget has nothing to
-show.
+It reads the window list from the window-manager seam (`ryoku wm state`) and acts
+through it (`ryoku wm act`), so the list, focus and close behave the same on
+Hyprland and on niri. Hiding is the one compositor-specific feature: it is gated
+on the `specialWorkspace` capability that `ryoku wm caps` reports, exactly the
+way Ryoku's own `ryoku-workspace` helper gates it, and it is left out of the
+panel on a compositor that has no scratchpad.
 
 ![window-stash demo: the panel on the bar, HIDE, SHOW and CLOSE](assets/demo.gif)
 
@@ -46,34 +49,39 @@ is current.
 
 | Item | Detail |
 | --- | --- |
-| Runs | `bin/windows.sh` (poll), `bin/stash.sh`, `bin/restore.sh`, `bin/close.sh` (on an explicit click) |
-| External commands | `bash`, `hyprctl`, `jq` -- declared in `dependencies.commands` |
-| Reads | `hyprctl clients -j`, `hyprctl monitors -j`, `hyprctl activeworkspace -j` |
+| Runs | `ryoku wm state` (poll), `ryoku wm caps` (capability gate, on start and on every panel open), `ryoku wm act window.close\|window.focus` (on an explicit click), `bin/stash.sh`, `bin/restore.sh` (only where the scratchpad capability exists) |
+| External commands | `ryoku`, `bash`, `hyprctl`, `jq`, `sed`, `grep` -- declared in `dependencies.commands` |
+| Reads | `ryoku wm state` (windows: id, appId, title, workspace), `ryoku wm caps` (capabilities); the hide scripts read `hyprctl clients/monitors` after the gate |
 | Writes | Nothing at all. No state file, no config, no cache. Settings go through `pluginApi.saveSetting` only |
 | Network | None. `capabilities.network` is absent on purpose |
 | Privileged | None. No `pkexec`, no `sudo` |
-| Dispatchers used | `hl.dsp.window.move`, `hl.dsp.window.close`, `hl.dsp.workspace.toggle_special`, `hl.dsp.focus` |
+| Dispatchers used | Through the seam: `window.close`, `window.focus`. For hiding only: `hl.dsp.window.move`, `hl.dsp.workspace.toggle_special`, `hl.dsp.focus` |
 
-### What the three buttons do
+### What the buttons do
 
-- **HIDE** parks the window in its own special workspace. It can be brought back
-  with **SHOW**, which returns it to the workspace it came from.
+- **HIDE** parks the window in its own special workspace; **SHOW** brings it back
+  to the workspace it came from. Both appear only where the scratchpad capability
+  exists -- on a compositor without one the panel says so and offers the rest.
+- **Clicking a row's name** focuses that window (`window.focus`), which is how a
+  buried window comes back without hiding anything.
 - **CLOSE** ends the window, exactly like its own close button: a program with
   unsaved work will lose it. There is no confirmation step, on purpose -- the
   button is a direct action, not a dialog.
 
-Every action is verified after the dispatch. `hyprctl` answers `ok` and exits 0
-even for an address that no longer exists, so the scripts re-read the client list
-and report a failure instead of a silent success.
+Close and focus are seam actions: the provider either performs them or reports
+the failure, so there is no silent success to detect. The hide scripts still
+verify after their dispatch, because `hyprctl` answers `ok` and exits 0 even for
+an address that no longer exists.
 
 ### Scope of the list
 
-Included: every mapped window. Excluded on purpose:
+Included: every window `ryoku wm state` reports. Excluded on purpose: windows on
+special workspaces other than the plugin's own `special:stash-*` ones (Ryoku's
+overlays such as the share bar), so the list stays about your normal windows.
 
-- **Fullscreen windows** (`fullscreen != 0`). They interact badly with special
-  workspaces; hiding one can leave the screen in a broken state.
-- **Other special workspaces** (Ryoku's own overlays such as the share bar), so
-  the list stays about your normal windows.
+The seam does not report whether a window is fullscreen, so a fullscreen window is
+listed like any other. Hiding one is allowed, but a fullscreen client and a
+scratchpad do not mix well -- close it or leave fullscreen first.
 
 ## Where it sits on the bar
 
