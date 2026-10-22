@@ -20,7 +20,8 @@
   "files": [
     "bin/stash.sh",
     "bin/restore.sh",
-    "assets/preview-widget.png"
+    "assets/preview-widget.png",
+    "assets/demo.gif"
   ],
   "capabilities": {
     "densities": [
