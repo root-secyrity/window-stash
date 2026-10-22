@@ -1,8 +1,11 @@
-<img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform">
-<img src="https://img.shields.io/badge/license-MIT-green" alt="License">
-<img src="https://img.shields.io/badge/QML-Qt6-orange" alt="QML">
-
-# Windows
+<p align="center">
+  <h1 align="center"># Windows</h1>
+  <p align="center">
+    <img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
+    <img src="https://img.shields.io/badge/QML-Qt6-orange" alt="QML">
+  </p>
+</p>
 
 A Ryoku shell plugin (`window-stash`). It lists the open windows on the bar and
 lets you park any of them out of sight with one click, bring it back to the
