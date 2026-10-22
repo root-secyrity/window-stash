@@ -6,7 +6,20 @@
 # restart. Not silent: following the window hands keyboard focus back to it.
 set -uo pipefail
 
+# Same capability gate as stash.sh: no scratchpad, nothing to restore from.
+if ! ryoku wm caps 2>/dev/null | grep -q '"specialWorkspace"'; then
+    echo "no-scratchpad"
+    exit 0
+fi
+if [[ $(ryoku wm status 2>/dev/null | sed -n 's/^Workspace model: //p' | tr -d '[:space:]') != fixed ]]; then
+    echo "no-scratchpad"
+    exit 0
+fi
+
 addr="${1:?window address required}"
+
+# Same id guard as stash.sh: only the shape the seam reports.
+[[ $addr =~ ^0x[0-9a-fA-F]+$ ]] || { echo "bad-window-id"; exit 1; }
 
 wsname=$(hyprctl clients -j 2>/dev/null \
     | jq -r --arg a "$addr" '.[]|select(.address==$a)|.workspace.name' 2>/dev/null || echo "")
