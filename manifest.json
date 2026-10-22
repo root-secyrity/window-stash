@@ -1,9 +1,9 @@
 {
   "id": "window-stash",
   "name": "Windows",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "Abdulazez Alnimre \u003croot-sec@localhost\u003e",
-  "description": "Windows is a Ryoku shell plugin.",
+  "description": "Lists the open windows and parks any of them out of sight, brings it back to its own workspace, or closes it.",
   "license": "MIT",
   "official": false,
   "hosts": [
@@ -15,9 +15,15 @@
     "panel": "content/Panel.qml"
   },
   "panel": {
-    "width": 320
+    "width": 380
   },
-  "files": [],
+  "files": [
+    "bin/windows.sh",
+    "bin/stash.sh",
+    "bin/restore.sh",
+    "bin/close.sh",
+    "assets/preview-widget.png"
+  ],
   "capabilities": {
     "densities": [
       "glyph",
@@ -29,16 +35,29 @@
     "label": "Windows"
   },
   "dependencies": {
-    "commands": []
+    "commands": [
+      "bash",
+      "hyprctl",
+      "jq"
+    ]
   },
   "metadata": {
     "settings": [
       {
-        "key": "showCount",
+        "key": "showLabel",
         "type": "toggle",
-        "label": "Show the tick count",
+        "label": "Show the text label",
         "group": "Windows",
         "default": true
+      },
+      {
+        "key": "poll",
+        "type": "int",
+        "label": "Check every (seconds)",
+        "group": "Windows",
+        "min": 2,
+        "max": 30,
+        "default": 3
       }
     ]
   }
