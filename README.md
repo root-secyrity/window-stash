@@ -112,5 +112,5 @@ version bump never reaches an installed copy.
 
 ## Author
 
-root-sec <root-sec@localhost>: this plugin is community-made (`official`
+root-sec: this plugin is community-made (`official`
 is false).
