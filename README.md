@@ -100,9 +100,9 @@ ryoku plugin add . --bar --yes
 
 ## Preview
 
-`assets/preview-widget.png` is a real capture of the bar glyph. It is small
-(100x42), so a wider capture with the panel open is still wanted before the
-listing goes to Ryostore.
+`assets/preview-widget.png` is a real capture of the widget on the QS Bar: the
+state mark and the `Windows` label sitting between the system readouts and the
+music pill, cropped from a full-width bar screenshot and enlarged 3.2x.
 
 ## Reviews and updates
 
@@ -112,5 +112,5 @@ version bump never reaches an installed copy.
 
 ## Author
 
-root-sec: this plugin is community-made (`official`
+root-sec <root-secyrity@users.noreply.github.com>: this plugin is community-made (`official`
 is false).
