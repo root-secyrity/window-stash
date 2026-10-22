@@ -1,3 +1,7 @@
+<img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform">
+<img src="https://img.shields.io/badge/license-MIT-green" alt="License">
+<img src="https://img.shields.io/badge/QML-Qt6-orange" alt="QML">
+
 # Windows
 
 A Ryoku shell plugin (`window-stash`). It lists the open windows on the bar and
