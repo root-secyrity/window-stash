@@ -129,5 +129,5 @@ version bump never reaches an installed copy.
 
 ## Author
 
-root-sec <root-secyrity@users.noreply.github.com>: this plugin is community-made (`official`
+root-sec : this plugin is community-made (`official`
 is false).
