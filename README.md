@@ -8,6 +8,8 @@ workspace it came from, or close it.
 compositor Ryoku ships) there is no such command and the widget has nothing to
 show.
 
+![window-stash demo: the panel on the bar, HIDE, SHOW and CLOSE](assets/demo.gif)
+
 ## Why it exists
 
 Hyprland 0.56 has **no `minimize` dispatcher** (`hl.dsp.window.*` has close, kill,
